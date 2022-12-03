@@ -1,5 +1,6 @@
 library(tidyverse)
 library(dplyr)
+library(maps)
 
 # The functions might be useful for A4
 source("../source/a4-helpers.R")
@@ -23,7 +24,7 @@ test_query2 <- function(num = 6) {
 # Your functions and variables might go here ... <todo: update comment>
 #----------------------------------------------------------------------------#
 incarceration_df <- get_data()
-# what state had the highest amount of female adult jail population. which state had the highest male adult jail population?
+
 state_f_adult_jail_pop <- incarceration_df %>%
   drop_na() %>%
   group_by(state) %>%
@@ -93,9 +94,9 @@ state_highest_jail_pop <- incarceration_df %>%
 # Growth of the U.S. Prison Population
 # Your functions might go here ... <todo:  update comment>
 #----------------------------------------------------------------------------#
-# This function ... <todo:  update comment>
 library(ggplot2)
 
+#calculates total prison population for each year from 1970-2018
 get_year_prison_pop <- function() {
   df <- incarceration_df %>%
     group_by(year) %>%
@@ -103,7 +104,7 @@ get_year_prison_pop <- function() {
   return(df)
 }
 
-# This function ... <todo:  update comment>
+# creates the plot fro the total prison population of each year
 plot_prison_pop_for_us <- function() {
   df_for_plot <- get_year_prison_pop()
   plot <- ggplot(data = df_for_plot) +
@@ -122,6 +123,7 @@ plot_prison_pop_for_us()
 # Your functions might go here ... <todo:  update comment>
 # See Canvas
 #----------------------------------------------------------------------------#
+#gets the prison population for each state input into the function
 get_prison_pop_by_states <- function(states) {
   df <- incarceration_df %>%
     filter(state %in% states) %>%
@@ -131,6 +133,7 @@ get_prison_pop_by_states <- function(states) {
 }
 get_prison_pop_by_states(c("CA", "CO", "DC", "NY", "AL", "TX"))
 
+#plots the state priosn population on a line graph 
 plot_jail_pop_by_states <- function(states) {
   df_for_plot <- get_prison_pop_by_states(states)
   plot <- ggplot(data = df_for_plot) +
@@ -149,7 +152,7 @@ plot_jail_pop_by_states(c("CA", "CO", "WA", "NY", "AL", "TX"))
 # Your functions might go here ... <todo:  update comment>
 # See Canvas
 #----------------------------------------------------------------------------#
-
+#calculate the black jail population for each region
 total_black_jail_pop_region <- function() {
   df <- incarceration_df %>%
     group_by(region) %>%
@@ -161,6 +164,7 @@ total_black_jail_pop_region <- function() {
 
 total_black_jail_pop_region()
 
+#calculate the latinx jail population for each region
 total_latinx_jail_pop_region <- function() {
   df <- incarceration_df %>%
     group_by(region) %>%
@@ -178,6 +182,7 @@ black_latinx_data <- combined_data %>%
   select(region, latinx_jail_pop_1, black_jail_pop_1) %>%
   gather(key = race, value = population, -region)
 
+#creates a barchart comparing black and latinx jail popualtions by region
 plot_black_latinx_jail_pop <- function() {
   ggplot(black_latinx_data) +
     geom_col(
@@ -200,39 +205,48 @@ plot_black_latinx_jail_pop()
 ## Load data frame ----
 # show the native_prison_pop in each state
 total_native_prison_pop_state <- function() {
-  df <- incarceration_df %>%
+  df2 <- incarceration_df %>%
     group_by(state) %>%
     drop_na() %>%
     summarize(native_prison_pop_1 = sum(native_prison_pop)) %>%
-    select(state, native_prison_pop_1)
-  return(df)
+    select(state, native_prison_pop_1)%>%
+  mutate(Code = state)%>%
+  return(df2)
 }
 
 total_native_prison_pop_state()
 
-state_map <- map_data("state")
+state_name_with_codes <- read.csv("state_names_and_codes.csv")
 
-native_prison_pop_map <- merge(state_map, total_native_prison_pop_state(), by.x = "region", by.y = "state")
+native_pop_state <-left_merge <- left_join(total_native_prison_pop_state(), state_name_with_codes, by = "Code")
 
-# ggplot(native_prison_pop_map)+
-#   geom_polygon(mapping = aes(x = long, y = lat, group = group, fill = native_prison_pop_1) +
-#   colour = "black",
-#   coord_map("polyconic")
-# )
+native_pop_state_2 <- native_pop_state %>%
+  mutate(region = tolower(State))
+  
+state_map <- map_data("state") 
 
-native_prison_pop_national <- function() {
-  df <- ggplot(native_prison_pop_map, aes(x = long, y = lat, group = group, fill = native_prison_pop_1)) +
-    geom_polygon(colour = "black") +
-    coord_map("polyconic")
-  return(df)
+native_prison_pop_map <- left_join(state_map, native_pop_state_2, by = "region")
+
+#creates a map shaded with the different colors that correspond with the native prison population for each state
+native_prison_pop_national <- function(){
+  plot <- ggplot(native_prison_pop_map) +
+    geom_polygon(
+      mapping= aes(x = long, y = lat, group = group, fill = native_prison_pop_1),
+      color= "white",
+      size = .1
+    ) +
+    coord_map() +
+    labs(
+      title = "Native prison population for each state"
+    ) +
+    scale_fill_continuous(low = "#132B43", high = "Red") +
+    labs(fill = "Native Pop")
+  return(plot)
 }
-# ggplot(state_shape\\) +
-#   geom_polygon(
-#     mapping = aes(x= long, y = lat, group = group),
-#     color= "white",
-#     size = .1
-#   )
-# coord_map()
+
+native_prison_pop_national()
+
+
 
 
 

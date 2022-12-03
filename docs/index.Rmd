@@ -4,6 +4,7 @@ author: "Selma Link"
 date: '2022-11-01'
 output: html_document
 ---
+
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(error = TRUE)
 ```
@@ -13,13 +14,15 @@ source("../source/a4-helpers.R")
 source("../source/analysis.R")
 ```
 
-## Abstract 
+## Abstract
+
 This project showcases the systematic racism in prisons from 1970 to 2018. The data is split up by race, gender, age, etc. From the data, we can determine what trends categories like race, gender, and age play in the fluctuation of prison populations. More specifically gender and race to determine highest prison populations over time and what state has the highest prison population overtime as well.
 
-## Introduction 
-Throughout history, incarceration trends have increased exponentially. Social, racial, and gender minorities make up the majority of prison and jail populations today. Mass incarceration increases poverty rates, decreases voting blocs, and etc. With criminal justice reform organizations like the Vera institute, Vera institute provides data outlining mass incarceration trends from 1970 to 2018. From this data, the direct stakeholders can be characterized as inmates and minority groups (lower education and low economic status) who are inevitably more prone to arrest and being convicted of a crime. The indirect stakeholders include prisons/jail institutions and government officials/courts who are incharge of who is incarcerated and who is not. From this data I aim to see which state has the highest number of mass incarceration from 1970 to 2018 and what that number is. What states have the highest incarceration rates for male and females (including numbers). From the highest incarceration rate, how many of the incarcerated population is black. 
+## Introduction
 
-## Data Summary 
+Throughout history, incarceration trends have increased exponentially. Social, racial, and gender minorities make up the majority of prison and jail populations today. Mass incarceration increases poverty rates, decreases voting blocs, and etc. With criminal justice reform organizations like the Vera institute, Vera institute provides data outlining mass incarceration trends from 1970 to 2018. From this data, the direct stakeholders can be characterized as inmates and minority groups (lower education and low economic status) who are inevitably more prone to arrest and being convicted of a crime. The indirect stakeholders include prisons/jail institutions and government officials/courts who are incharge of who is incarcerated and who is not. From this data I aim to see which state has the highest number of mass incarceration from 1970 to 2018 and what that number is. What states have the highest incarceration rates for male and females (including numbers). From the highest incarceration rate, how many of the incarcerated population is black.
+
+## Data Summary
 
 From the incarcerated data frame, the state with the highest female jail population is `r state_f_adult_jail_pop` with a total female jail population of `r max_f_adult_jail_pop`. The state with the highest male jail population is `r state_m_adult_jail_pop` with a total male jail population of `r max_m_adult_jail_pop`. The state with the highest amount of black jail population is `r state_highest_black_jail_pop` with the total number of black jail inmates coming to `r highest_black_jail_pop`. The total jail population in CA is `r cali_highest_jail_pop`, thus the total number of black jail inmates make up a fourth of the jail population in CA.
 
@@ -28,18 +31,29 @@ From the incarcerated data frame, the state with the highest female jail populat
 ```{r plot 1, echo = FALSE, include = TRUE, message = FALSE}
 plot_prison_pop_for_us()
 ```
+
 The plot depicts the growth of prison populations over time from the year 1970 to the year 2018. The bar chart starts of with low numbers and rapidly increases in the 1980 and 90s. In 2009, prison populations were at an all time high. From there on out prison populations have gradually been decreasing. As prison population rates keep decreasing, will they eventually reach rates as low as in the 1970s?
 
-## Growth of Prison Population by State 
+## Growth of Prison Population by State
 
 ```{r plot 2, echo = FALSE, include = TRUE, message = FALSE}
 plot_jail_pop_by_states(c("CA", "CO", "WA", "NY", "AL", "TX"))
 ```
-The plot depicts prison population growths for Alabama, California, Colorado, New York, Texas, and Washington from 1970 to 2018. California and Texas are the states that have the highest prison populations and growth. California has the largest prison population out of all of the states. This could also be because it has the largest population of people out of all the other states depicted in the plot. From the plot, the first increase in prison population is around the early 1980s. From there states like Alabama, Colorado, New York, and Washington have prison population rates growing at a gradual pace. California and Texas have extremely rapid growth rates. For states that are larger with more prisons, what are the demographics of those prisons? 
 
-## Regional jail populations regarding race 
+The plot depicts prison population growths for Alabama, California, Colorado, New York, Texas, and Washington from 1970 to 2018. California and Texas are the states that have the highest prison populations and growth. California has the largest prison population out of all of the states. This could also be because it has the largest population of people out of all the other states depicted in the plot. From the plot, the first increase in prison population is around the early 1980s. From there states like Alabama, Colorado, New York, and Washington have prison population rates growing at a gradual pace. California and Texas have extremely rapid growth rates. For states that are larger with more prisons, what are the demographics of those prisons?
+
+## Regional jail populations regarding race
 
 ```{r plot 3, echo= FALSE, include = TRUE, message = FALSE}
 plot_black_latinx_jail_pop()
 ```
-The plot depicts black jail populations vs. Latinx jail populations in regards to the region. I wondered what the proportionality was in terms of race in jail populations. Is there a higher black jail population throughout the US or is there a higher latinx jail population? As seen in the plot, the Midwest, Northeast, and South all have higher black jail populations than latinx jail populations. The West region however does have a higher latinx jail population than black jail population. Thus, there is an overall higher black jail population throughout the US. 
+
+The plot depicts black jail populations vs. Latinx jail populations in regards to the region. I wondered what the proportionality was in terms of race in jail populations. Is there a higher black jail population throughout the US or is there a higher latinx jail population? As seen in the plot, the Midwest, Northeast, and South all have higher black jail populations than latinx jail populations. The West region however does have a higher latinx jail population than black jail population. Thus, there is an overall higher black jail population throughout the US.
+
+## Native national prison population
+
+```{r plot 4, echo= FALSE, include = TRUE, message = FALSE}
+native_prison_pop_national()
+```
+
+The plot depicts a map of the United States of America. Each state correlates with a color that is characterized with the amount of native prison population for that state. From this plot, we can come to the conclusion that California has the highest native prison population. The lower native prison populations are located more towards the south eastern parts of the US.
